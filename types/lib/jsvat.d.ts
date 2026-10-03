@@ -14,6 +14,7 @@ export interface Rules {
 export interface Country {
     name: string;
     codes: ReadonlyArray<string>;
+    vatStartsWithCountryCode?: boolean;
     calcFn: (vat: string, options?: {
         readonly [key: string]: any;
     }) => boolean;
