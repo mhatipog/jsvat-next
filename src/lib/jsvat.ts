@@ -16,6 +16,7 @@ export interface Rules {
 export interface Country {
   name: string;
   codes: ReadonlyArray<string>;
+  vatStartsWithCountryCode?: boolean;
   calcFn: (vat: string, options?: { readonly [key: string]: any }) => boolean;
   rules: Rules;
 }
@@ -68,8 +69,9 @@ const countriesVATDoesNotStartWithCountryCode: ReadonlyArray<string> = [
   norway.name
 ];
 
-function isVATStartWithCountryCode(countryName: string): boolean {
-  return !countriesVATDoesNotStartWithCountryCode.includes(countryName);
+function isVATStartWithCountryCode(country: Country): boolean {
+  if (typeof country.vatStartsWithCountryCode === 'boolean') return country.vatStartsWithCountryCode;
+  return !countriesVATDoesNotStartWithCountryCode.includes(country.name);
 }
 
 function isVATStartWithNumber(vat: string): boolean {
@@ -78,7 +80,7 @@ function isVATStartWithNumber(vat: string): boolean {
 
 function getCountry(vat: string, countriesList: ReadonlyArray<Country>): Country | undefined {
   for (const country of countriesList) {
-    if (startsWithCode(vat, country) || (!isVATStartWithCountryCode(country.name) && isVATStartWithNumber(vat))) {
+    if (startsWithCode(vat, country) || (!isVATStartWithCountryCode(country) && isVATStartWithNumber(vat))) {
       return { ...country };
     }
   }
