@@ -1,4 +1,4 @@
-import { belgium } from '../index';
+import { belgium, checkVAT } from '../index';
 import { codes, invalid, name, valid, validOnlyByFormat } from './countries_vat_lists/belgium.vat';
 import { addCharsToString, checkInvalidVat, checkOnlyValidFormatVat, checkValidVat } from './utils';
 
@@ -17,6 +17,11 @@ describe('Belgium', () => {
 
   it('should return "true" result for valid VATs with extra space characters', () => {
     valid.map((vat) => addCharsToString(vat, ' ')).forEach((vat) => checkValidVat(vat, [belgium], codes, name));
+  });
+
+  it('accepts current Belgian numbers starting with 1 and rejects nine-digit shorthand', () => {
+    expect(checkVAT('BE1001686633', [belgium]).isValid).toBe(true);
+    expect(checkVAT('BE411905847', [belgium]).isValid).toBe(false);
   });
 
   it('should return "false" result for invalid VATs', () => {

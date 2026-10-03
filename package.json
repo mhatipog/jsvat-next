@@ -9,7 +9,7 @@
   "scripts": {
     "build": "rimraf lib && yarn build:commonjs && yarn build:es6 && yarn build:amd && yarn build:umd && yarn build:system && yarn minify",
     "build:commonjs": "yarn ts --outDir lib/commonjs --module CommonJS --target ES5",
-    "build:es6": "yarn ts --outDir lib/es6 --module ES6",
+    "build:es6": "yarn ts --outDir lib/es6 --module ES6 && node scripts/fix-esm.js",
     "build:amd": "yarn ts --outDir lib/amd --module AMD",
     "build:umd": "browserify lib/commonjs/index.js --standalone jsvat -o lib/umd/index.js",
     "build:system": "yarn ts --outDir lib/system --module System",
@@ -79,5 +79,19 @@
     "hooks": {
       "pre-commit": "pretty-quick --staged"
     }
+  },
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./lib/es6/index.js",
+      "require": "./lib/commonjs/index.js",
+      "default": "./lib/commonjs/index.js"
+    },
+    "./lib/es6": "./lib/es6/index.js",
+    "./lib/commonjs": "./lib/commonjs/index.js",
+    "./lib/amd": "./lib/amd/index.js",
+    "./lib/umd": "./lib/umd/index.js",
+    "./lib/system": "./lib/system/index.js",
+    "./package.json": "./package.json"
   }
 }
