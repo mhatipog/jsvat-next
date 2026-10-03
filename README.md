@@ -141,6 +141,7 @@ In general `Country` should implement following structure:
 interface Country {
   name: string;
   codes: ReadonlyArray<string>;
+  vatStartsWithCountryCode?: boolean; // default behavior expects the country code
   calcFn: (vat: string, options?: object) => boolean; //options - isn't a mandatory param
   rules: {
     multipliers: {}; // you can leave it empty
@@ -166,6 +167,23 @@ export const wonderland = {
 };
 
 checkVAT('WD12345678', [wonderland]); // true
+```
+
+If a country's VAT identifier does not start with its country code, set `vatStartsWithCountryCode: false` and make the first capture group in its regex empty:
+
+```javascript
+const example = {
+  name: 'Example',
+  codes: ['EX', 'EXP', '999'],
+  vatStartsWithCountryCode: false,
+  calcFn: (vat) => vat.length === 9,
+  rules: {
+    multipliers: {},
+    regex: [/^()(\d{9})$/]
+  }
+};
+
+checkVAT('123456789', [example]); // valid without an EX prefix
 ```
 
 ## About modules... ES6 / CommonJS / AMD / UMD / System
