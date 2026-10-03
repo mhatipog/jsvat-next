@@ -18,7 +18,8 @@
     "ts": "tsc -p tsconfig.json",
     "test": "./node_modules/.bin/jest",
     "lint": "tslint --project .",
-    "minify": "node ./scripts/minify.js"
+    "minify": "node ./scripts/minify.js",
+    "pretest": "yarn build:commonjs"
   },
   "license": "MIT",
   "repository": {
@@ -93,5 +94,10 @@
     "./lib/umd": "./lib/umd/index.js",
     "./lib/system": "./lib/system/index.js",
     "./package.json": "./package.json"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^\\.\\./index$": "<rootDir>/lib/commonjs/index.js"
+    }
   }
 }
