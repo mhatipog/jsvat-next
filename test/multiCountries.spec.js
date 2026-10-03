@@ -1,4 +1,4 @@
-import { unitedKingdom, brazil, lithuania } from '../index';
+import { checkVAT, unitedKingdom, brazil, lithuania } from '../index';
 import * as unitedKingdomVat from './countries_vat_lists/unitedKingdom.vat';
 import * as brazilVat from './countries_vat_lists/brazil.vat';
 import * as lithuanianVat from './countries_vat_lists/lithuania.vat';
@@ -77,5 +77,27 @@ describe('Multicountries', () => {
     it('should return "false" result for invalid VATs', () => {
       invalid.forEach((vat) => checkInvalidVat(vat, countriesToTest));
     });
+  });
+});
+
+
+describe('Custom countries', () => {
+  it('supports VAT numbers without a country-code prefix when configured', () => {
+    const customCountry = {
+      name: 'Example',
+      codes: ['EX', 'EXP', '999'],
+      vatStartsWithCountryCode: false,
+      calcFn: (vat) => vat === '123456789',
+      rules: {
+        multipliers: {},
+        regex: [/^()(\d{9})$/]
+      }
+    };
+
+    const result = checkVAT('123456789', [customCountry]);
+
+    expect(result.isValid).toBe(true);
+    expect(result.isSupportedCountry).toBe(true);
+    expect(result.country.name).toBe('Example');
   });
 });
