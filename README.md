@@ -22,6 +22,13 @@ Small library to check validity VAT numbers (European + some others counties). (
 - Detecting possible country before you finish;
 - Typescript;
 
+### What validation means
+
+jsvat-next validates a VAT number locally: its country-specific format and, where available, its checksum. It deliberately makes no network requests, so a successful result does **not** prove that the VAT registration exists, is active, or belongs to a particular business.
+
+For a live EU VAT-registration check, use the European Commission's [VIES service](https://ec.europa.eu/taxation_customs/vies/).
+
+
 ## Installation
 
 Installation:
@@ -165,21 +172,15 @@ checkVAT('WD12345678', [wonderland]); // true
 
 jsvat build includes `es6`, `commonjs`, `amd`, `umd` and `system` builds at the same time.
 
-By default you will stick to `es6` version for browsers and build tools (webpack, etc):
-which expects you to import it as
+The package supports both native ESM and CommonJS. For ESM, import it normally:
 
 ```javascript
 import { checkVAT, belgium, austria } from 'jsvat-next';
 ```
 
-Node.js automatically will pick up `CommonJS` version by default.
-Means you could import it like:
+CommonJS consumers can use `require()`:
 
 ```jsx harmony
-// Modern Frontend and Node
-const { checkVAT, belgium, austria } = require('jsvat-next');
-
-// Node.js
 const { checkVAT, belgium, austria } = require('jsvat-next');
 
 // Legacy Frontend
